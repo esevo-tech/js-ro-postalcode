@@ -49,7 +49,6 @@ function obtainCounty(countyName) {
 
   const newCounty = {
     "index": numCounties++,
-    "name": countyName,
     "localities": {}
   };
 
@@ -65,8 +64,7 @@ function obtainLocality(countyName, localityName) {
   }
 
   const newLocality = {
-    "index": numLocalities++,
-    "name": localityName
+    "index": numLocalities++
   };
 
   county.localities[localityName] = newLocality;
