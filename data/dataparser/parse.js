@@ -5,6 +5,7 @@ const path = require("path");
 let countiesMap = {};
 let numCounties = 0;
 let numLocalities = 0;
+let numStreets = 0;
 
 function loadFile(path) {
   const workbook = xlsx.readFile(path);
@@ -27,13 +28,15 @@ function parseLargeLocalities(sheet) {
 
   let countyAt = (index) => sheet["A" + index];
   let localityAt = (index) => sheet["B" + index];
+  let streetNameAt = (index) => sheet["D" + index];
 
   let countyCell = countyAt(rowIndex);
   while (countyCell !== undefined) {
     const countyName = countyCell.v;
     const localityName = localityAt(rowIndex).v;
+    const streetName = streetNameAt(rowIndex).v;
 
-    obtainLocality(countyName, localityName);
+    obtainStreet(countyName, localityName, streetName);
 
     countyCell = countyAt(++rowIndex);
   }
@@ -77,7 +80,7 @@ function obtainLocality(countyName, localityName) {
   const county = obtainCounty(countyName);
 
   if (county.localities[localityName] !== undefined) {
-    return county.localities[countyName];
+    return county.localities[localityName];
   }
 
   const newLocality = {
@@ -86,6 +89,25 @@ function obtainLocality(countyName, localityName) {
 
   county.localities[localityName] = newLocality;
   return newLocality;
+}
+
+function obtainStreet(countyName, localityName, streetName) {
+  const locality = obtainLocality(countyName, localityName);
+
+  if (locality.streets === undefined) {
+    locality.streets = {};
+  }
+
+  if (locality.streets[streetName] !== undefined) {
+    return locality.streets[streetName];
+  }
+
+  const newStreet = {
+    "index": numStreets++
+  };
+
+  locality.streets[streetName] = newStreet;
+  return newStreet;
 }
 
 function persist(name, data) {
