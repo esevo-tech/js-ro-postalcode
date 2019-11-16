@@ -33,14 +33,14 @@ function parseBucharest(sheet) {
 
   let streetCell = streetNameAt(rowIndex);
   while (streetCell !== undefined) {
-    const sectorName = sectorNameAt(rowIndex);
+    const sectorName = sectorNameAt(rowIndex).v;
     const countyName = "București";
     const localityName = `${countyName} Sector ${sectorName}`;
     const streetName = streetCell.v;
 
     obtainStreet(countyName, localityName, streetName);
 
-    streetCell = streetNameAt(rowIndex++);
+    streetCell = streetNameAt(++rowIndex);
   }
 }
 
