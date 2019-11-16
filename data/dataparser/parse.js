@@ -17,12 +17,29 @@ function loadFile(path) {
   const largeLocalitiesSheet = workbook.Sheets[workbook.SheetNames[1]];
   const smallLocalitiesSheet = workbook.Sheets[workbook.SheetNames[2]];
 
-  parseSmallLocalities(smallLocalitiesSheet);
+  //parseSmallLocalities(smallLocalitiesSheet);
+  parseLargeLocalities(largeLocalitiesSheet);
   persist("counties.json", countiesMap);
 }
 
+function parseLargeLocalities(sheet) {
+  let rowIndex = 2; // skip header row
+
+  let countyAt = (index) => sheet["A" + index];
+  let localityAt = (index) => sheet["B" + index];
+
+  let countyCell = countyAt(rowIndex);
+  while (countyCell !== undefined) {
+    const countyName = countyCell.v;
+    const localityName = localityAt(rowIndex).v;
+
+    obtainLocality(countyName, localityName);
+
+    countyCell = countyAt(++rowIndex);
+  }
+}
+
 function parseSmallLocalities(sheet) {
-  let countyIndex = 0;
   let rowIndex = 2; // skip header row
   
   let countyAt = (index) => sheet["B" + index];
@@ -30,7 +47,7 @@ function parseSmallLocalities(sheet) {
   let postalCodeAt = (index) => sheet["D" + index];
 
   let countyCell = countyAt(rowIndex);
-  while (countyCell != undefined) {
+  while (countyCell !== undefined) {
     const countyName = countyCell.v;
     const localityName = localityAt(rowIndex).v;
     const postalCode = postalCodeAt(rowIndex).v;
