@@ -50,6 +50,9 @@ function parseBucharest(sheet) {
     // Streets which have a single postal code.
     if (isEmpty(streetNumberName)) {
       street.postalCode = postalCode;
+    } else {
+      const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
+      streetNumber.postalCode = postalCode;
     }
 
     streetCell = streetNameAt(++rowIndex);
