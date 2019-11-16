@@ -28,15 +28,18 @@ function parseLargeLocalities(sheet) {
 
   let countyAt = (index) => sheet["A" + index];
   let localityAt = (index) => sheet["B" + index];
+  let streetTypeAt = (index) => sheet["C" + index];
   let streetNameAt = (index) => sheet["D" + index];
 
   let countyCell = countyAt(rowIndex);
   while (countyCell !== undefined) {
     const countyName = countyCell.v;
     const localityName = localityAt(rowIndex).v;
+    const streetType = streetTypeAt(rowIndex).v;
     const streetName = streetNameAt(rowIndex).v;
 
-    obtainStreet(countyName, localityName, streetName);
+    const street = obtainStreet(countyName, localityName, streetName);
+    street.type = streetType;
 
     countyCell = countyAt(++rowIndex);
   }
