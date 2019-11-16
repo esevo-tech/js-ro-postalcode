@@ -9,6 +9,7 @@ let numCounties = 0;
 let numLocalities = 0;
 let numStreets = 0;
 let numStreetNumbers = 0;
+let numPostalCodes = 0;
 
 function loadFile(path) {
   const workbook = xlsx.readFile(path);
@@ -194,6 +195,7 @@ function obtainStreetNumber(countyName, localityName, streetName, streetNumberNa
 function registerPostalCode(postalCode, countyName, localityName, streetName, streetNumberName) {
   let newPostalCode = {};
   postalCodeMap[postalCode] = newPostalCode;
+  numPostalCodes++;
 
   if (countyName == undefined) return newPostalCode;
   const county = obtainCounty(countyName);
@@ -219,6 +221,7 @@ function logStats() {
   console.log(`Num. of localities: ${numLocalities}.`);
   console.log(`Num. of streets: ${numStreets}.`);
   console.log(`Num. of street numbers: ${numStreetNumbers}.`);
+  console.log(`Num. of postal codes: ${numPostalCodes}.`);
 }
 
 function persist(name, data) {
