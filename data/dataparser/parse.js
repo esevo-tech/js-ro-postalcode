@@ -21,6 +21,7 @@ function loadFile(path) {
 function parseCounties(sheet) {
   const countyMap = {};
   
+  let countyIndex = 0;
   let rowIndex = 2; // skip header row
   let cellAt = (index) => sheet["B" + index];
   let cell = cellAt(rowIndex);
@@ -29,7 +30,8 @@ function parseCounties(sheet) {
 
     if (countyMap[countyName] === undefined) {
       countyMap[countyName] = {
-        "name": countyName
+        "index": countyIndex++,
+        "name": countyName,
       };
     }
 
