@@ -19,9 +19,9 @@ function loadFile(path) {
   const largeLocalitiesSheet = workbook.Sheets[workbook.SheetNames[1]];
   const smallLocalitiesSheet = workbook.Sheets[workbook.SheetNames[2]];
 
-  //parseBucharest(bucharestSheet);
+  parseBucharest(bucharestSheet);
   parseLargeLocalities(largeLocalitiesSheet);
-  //parseSmallLocalities(smallLocalitiesSheet);
+  parseSmallLocalities(smallLocalitiesSheet);
   persist("counties.json", countiesMap);
 }
 
