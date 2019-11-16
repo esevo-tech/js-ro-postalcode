@@ -27,13 +27,17 @@ function parseSmallLocalities(sheet) {
   
   let countyAt = (index) => sheet["B" + index];
   let localityAt = (index) => sheet["C" + index];
+  let postalCodeAt = (index) => sheet["D" + index];
 
   let countyCell = countyAt(rowIndex);
   while (countyCell != undefined) {
     const countyName = countyCell.v;
     const localityName = localityAt(rowIndex).v;
+    const postalCode = postalCodeAt(rowIndex).v;
 
-    obtainLocality(countyName, localityName);
+    const locality = obtainLocality(countyName, localityName);
+    locality.postalCode = postalCode;
+
     countyCell = countyAt(++rowIndex);
   }
 }
