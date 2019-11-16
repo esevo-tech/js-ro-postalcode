@@ -19,8 +19,8 @@ function loadFile(path) {
   const largeLocalitiesSheet = workbook.Sheets[workbook.SheetNames[1]];
   const smallLocalitiesSheet = workbook.Sheets[workbook.SheetNames[2]];
 
-  parseBucharest(bucharestSheet);
-  //parseLargeLocalities(largeLocalitiesSheet);
+  //parseBucharest(bucharestSheet);
+  parseLargeLocalities(largeLocalitiesSheet);
   //parseSmallLocalities(smallLocalitiesSheet);
   persist("counties.json", countiesMap);
 }
@@ -82,7 +82,7 @@ function parseLargeLocalities(sheet) {
     street.type = streetType;
 
     // Streets which have a single postal code.
-    if (streetNumberName === undefined || streetNumberName.trim().length == 0) {
+    if (isEmpty(streetNumberName)) {
       street.postalCode = postalCode;
     } else {
       const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
