@@ -30,16 +30,25 @@ function parseLargeLocalities(sheet) {
   let localityAt = (index) => sheet["B" + index];
   let streetTypeAt = (index) => sheet["C" + index];
   let streetNameAt = (index) => sheet["D" + index];
-
+  let streetNumberAt = (index) => sheet["E" + index];
+  let postalCodeAt = (index) => sheet["F" + index];
+  
   let countyCell = countyAt(rowIndex);
   while (countyCell !== undefined) {
     const countyName = countyCell.v;
     const localityName = localityAt(rowIndex).v;
     const streetType = streetTypeAt(rowIndex).v;
     const streetName = streetNameAt(rowIndex).v;
-
+    const streetNumber = streetNumberAt(rowIndex).v;
+    const postalCode = postalCodeAt(rowIndex).v;
+    
     const street = obtainStreet(countyName, localityName, streetName);
     street.type = streetType;
+
+    // Streets which have a single postal code.
+    if (streetNumber === undefined || streetNumber.trim().length == 0) {
+      street.postalCode = postalCode;
+    }
 
     countyCell = countyAt(++rowIndex);
   }
