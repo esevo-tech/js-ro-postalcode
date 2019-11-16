@@ -28,17 +28,19 @@ function loadFile(path) {
 function parseBucharest(sheet) {
   let rowIndex = 2; // skip header row
 
-  let sectorAt = (index) => sheet["E" + index];
+  let sectorNameAt = (index) => sheet["E" + index];
+  let streetNameAt = (index) => sheet["B" + index];
 
-  let sectorCell = sectorAt(rowIndex);
-  while (sectorCell !== undefined) {
-    const sectorName = sectorCell.v;
+  let streetCell = streetNameAt(rowIndex);
+  while (streetCell !== undefined) {
+    const sectorName = sectorNameAt(rowIndex);
     const countyName = "București";
     const localityName = `${countyName} Sector ${sectorName}`;
+    const streetName = streetCell.v;
 
-    obtainLocality(countyName, localityName);
+    obtainStreet(countyName, localityName, streetName);
 
-    sectorCell = sectorAt(rowIndex++);
+    streetCell = streetNameAt(rowIndex++);
   }
 }
 
