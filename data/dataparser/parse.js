@@ -19,9 +19,27 @@ function loadFile(path) {
   const largeLocalitiesSheet = workbook.Sheets[workbook.SheetNames[1]];
   const smallLocalitiesSheet = workbook.Sheets[workbook.SheetNames[2]];
 
+  parseBucharest(bucharestSheet);
+  //parseLargeLocalities(largeLocalitiesSheet);
   //parseSmallLocalities(smallLocalitiesSheet);
-  parseLargeLocalities(largeLocalitiesSheet);
   persist("counties.json", countiesMap);
+}
+
+function parseBucharest(sheet) {
+  let rowIndex = 2; // skip header row
+
+  let sectorAt = (index) => sheet["E" + index];
+
+  let sectorCell = sectorAt(rowIndex);
+  while (sectorCell !== undefined) {
+    const sectorName = sectorCell.v;
+    const countyName = "București";
+    const localityName = `${countyName} Sector ${sectorName}`;
+
+    obtainLocality(countyName, localityName);
+
+    sectorCell = sectorAt(rowIndex++);
+  }
 }
 
 function parseLargeLocalities(sheet) {
