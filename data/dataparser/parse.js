@@ -40,17 +40,18 @@ function parseLargeLocalities(sheet) {
     const localityName = localityAt(rowIndex).v;
     const streetType = streetTypeAt(rowIndex).v;
     const streetName = streetNameAt(rowIndex).v;
-    const streetNumber = streetNumberAt(rowIndex).v;
+    const streetNumberName = streetNumberAt(rowIndex).v;
     const postalCode = postalCodeAt(rowIndex).v;
     
     const street = obtainStreet(countyName, localityName, streetName);
     street.type = streetType;
 
     // Streets which have a single postal code.
-    if (streetNumber === undefined || streetNumber.trim().length == 0) {
+    if (streetNumberName === undefined || streetNumberName.trim().length == 0) {
       street.postalCode = postalCode;
     } else {
-      obtainStreetNumber(countyName, localityName, streetName, streetNumber);
+      const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
+      streetNumber.postalCode = postalCode;
     }
 
     countyCell = countyAt(++rowIndex);
@@ -125,22 +126,22 @@ function obtainStreet(countyName, localityName, streetName) {
   return newStreet;
 }
 
-function obtainStreetNumber(countyName, localityName, streetName, streetNumber) {
+function obtainStreetNumber(countyName, localityName, streetName, streetNumberName) {
   const street = obtainStreet(countyName, localityName, streetName);
 
   if (street.numbers === undefined) {
     street.numbers = {};
   }
 
-  if (street.numbers[streetNumber] !== undefined) {
-    return street.numbers[streetNumber];
+  if (street.numbers[streetNumberName] !== undefined) {
+    return street.numbers[streetNumberName];
   }
 
   const newStreetNumber = {
     "index": numStreetNumbers++
   }
 
-  street.numbers[streetNumber] = newStreetNumber;
+  street.numbers[streetNumberName] = newStreetNumber;
   return newStreetNumber;
 }
 
