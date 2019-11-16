@@ -28,17 +28,20 @@ function loadFile(path) {
 function parseBucharest(sheet) {
   let rowIndex = 2; // skip header row
 
-  let sectorNameAt = (index) => sheet["E" + index];
+  let streetTypeAt = (index) => sheet["A" + index];
   let streetNameAt = (index) => sheet["B" + index];
+  let sectorNameAt = (index) => sheet["E" + index];
 
   let streetCell = streetNameAt(rowIndex);
   while (streetCell !== undefined) {
     const sectorName = sectorNameAt(rowIndex).v;
     const countyName = "București";
     const localityName = `${countyName} Sector ${sectorName}`;
+    const streetType = streetTypeAt(rowIndex).v;
     const streetName = streetCell.v;
 
-    obtainStreet(countyName, localityName, streetName);
+    const street = obtainStreet(countyName, localityName, streetName);
+    street.type = streetType;
 
     streetCell = streetNameAt(++rowIndex);
   }
@@ -169,6 +172,10 @@ function persist(name, data) {
   const outputPath = path.join("output", name);
   const serializedData = JSON.stringify(data, null, 4);
   fs.writeFile(outputPath, serializedData, "utf8", () => {});
+}
+
+function isEmpty(text) {
+  return (text !== undefined && text !== null && text.trim().length == 0);
 }
 
 loadFile("../dataset/infocod-cu-siruta-mai-2016.xls");
