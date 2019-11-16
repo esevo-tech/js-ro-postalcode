@@ -11,10 +11,6 @@ let numStreetNumbers = 0;
 function loadFile(path) {
   const workbook = xlsx.readFile(path);
 
-  for (const sheetName of workbook.SheetNames) {
-    console.log(sheetName);
-  }
-  
   const bucharestSheet = workbook.Sheets[workbook.SheetNames[0]];
   const largeLocalitiesSheet = workbook.Sheets[workbook.SheetNames[1]];
   const smallLocalitiesSheet = workbook.Sheets[workbook.SheetNames[2]];
@@ -23,6 +19,7 @@ function loadFile(path) {
   parseLargeLocalities(largeLocalitiesSheet);
   parseSmallLocalities(smallLocalitiesSheet);
   persist("counties.json", countiesMap);
+  logStats();
 }
 
 function parseBucharest(sheet) {
@@ -182,6 +179,13 @@ function obtainStreetNumber(countyName, localityName, streetName, streetNumberNa
 
   street.numbers[streetNumberName] = newStreetNumber;
   return newStreetNumber;
+}
+
+function logStats() {
+  console.log(`Num. of counties: ${numCounties}.`);
+  console.log(`Num. of localities: ${numLocalities}.`);
+  console.log(`Num. of streets: ${numStreets}.`);
+  console.log(`Num. of street numbers: ${numStreetNumbers}.`);
 }
 
 function persist(name, data) {
