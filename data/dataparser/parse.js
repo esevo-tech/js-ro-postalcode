@@ -76,7 +76,7 @@ function obtainCounty(countyName) {
 function obtainLocality(countyName, localityName) {
   const county = obtainCounty(countyName);
 
-  if (county.localities[countyName] !== undefined) {
+  if (county.localities[localityName] !== undefined) {
     return county.localities[countyName];
   }
 
