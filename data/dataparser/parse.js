@@ -30,18 +30,27 @@ function parseBucharest(sheet) {
 
   let streetTypeAt = (index) => sheet["A" + index];
   let streetNameAt = (index) => sheet["B" + index];
+  let streetNumberNameAt = (index) => sheet["C" + index];
+  let postalCodeAt = (index) => sheet["D" + index];
   let sectorNameAt = (index) => sheet["E" + index];
 
   let streetCell = streetNameAt(rowIndex);
   while (streetCell !== undefined) {
+    const streetType = streetTypeAt(rowIndex).v;
+    const streetName = streetCell.v;
+    const streetNumberName = streetNumberNameAt(rowIndex).v;
+    const postalCode = postalCodeAt(rowIndex).v;
     const sectorName = sectorNameAt(rowIndex).v;
     const countyName = "București";
     const localityName = `${countyName} Sector ${sectorName}`;
-    const streetType = streetTypeAt(rowIndex).v;
-    const streetName = streetCell.v;
 
     const street = obtainStreet(countyName, localityName, streetName);
     street.type = streetType;
+
+    // Streets which have a single postal code.
+    if (isEmpty(streetNumberName)) {
+      street.postalCode = postalCode;
+    }
 
     streetCell = streetNameAt(++rowIndex);
   }
