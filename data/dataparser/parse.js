@@ -23,23 +23,48 @@ function loadFile(path) {
 function parseSmallLocalities(sheet) {
   let countyIndex = 0;
   let rowIndex = 2; // skip header row
-  let cellAt = (index) => sheet["B" + index];
-  let cell = cellAt(rowIndex);
-  while (cell != undefined) {
-    const countyName = cell.v;
-    obtainCounty(countyName);
-    cell = cellAt(++rowIndex);
+  
+  let countyAt = (index) => sheet["B" + index];
+  let localityAt = (index) => sheet["C" + index];
+
+  let countyCell = countyAt(rowIndex);
+  while (countyCell != undefined) {
+    const countyName = countyCell.v;
+    const localityName = localityAt(rowIndex).v;
+
+    obtainLocality(countyName, localityName);
+    countyCell = countyAt(++rowIndex);
   }
 }
 
 function obtainCounty(countyName) {
-  if (countiesMap[countyName] !== undefined)
+  if (countiesMap[countyName] !== undefined) {
     return countiesMap[countyName];
+  }
 
-  countiesMap[countyName] = {
+  const newCounty = {
     "index": numCounties++,
     "name": countyName,
+    "localities": {}
   };
+
+  countiesMap[countyName] = newCounty;
+  return newCounty;
+}
+
+function obtainLocality(countyName, localityName) {
+  const county = obtainCounty(countyName);
+
+  if (county.localities[countyName] !== undefined) {
+    return county.localities[countyName];
+  }
+
+  const newLocality = {
+    "name": localityName
+  };
+
+  county.localities[localityName] = newLocality;
+  return newLocality;
 }
 
 function persist(name, data) {
