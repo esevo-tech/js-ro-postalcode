@@ -49,10 +49,10 @@ function parseBucharest(sheet) {
 
     // Streets which have a single postal code.
     if (isEmpty(streetNumberName)) {
-      street.postalCode = postalCode;
+      street.postalCode = parsePostalCode(postalCode);
     } else {
       const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
-      streetNumber.postalCode = postalCode;
+      streetNumber.postalCode = parsePostalCode(postalCode);
     }
 
     streetCell = streetNameAt(++rowIndex);
@@ -83,10 +83,10 @@ function parseLargeLocalities(sheet) {
 
     // Streets which have a single postal code.
     if (isEmpty(streetNumberName)) {
-      street.postalCode = postalCode;
+      street.postalCode = parsePostalCode(postalCode);
     } else {
       const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
-      streetNumber.postalCode = postalCode;
+      streetNumber.postalCode = parsePostalCode(postalCode);
     }
 
     countyCell = countyAt(++rowIndex);
@@ -107,10 +107,14 @@ function parseSmallLocalities(sheet) {
     const postalCode = postalCodeAt(rowIndex).v;
 
     const locality = obtainLocality(countyName, localityName);
-    locality.postalCode = postalCode;
+    locality.postalCode = parsePostalCode(postalCode);
 
     countyCell = countyAt(++rowIndex);
   }
+}
+
+function parsePostalCode(postalCode) {
+  return parseInt(postalCode, 10);
 }
 
 function obtainCounty(countyName) {
