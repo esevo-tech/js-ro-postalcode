@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 let countiesMap = {};
+let postalCodeMap = {};
+
 let numCounties = 0;
 let numLocalities = 0;
 let numStreets = 0;
@@ -18,7 +20,10 @@ function loadFile(path) {
   parseBucharest(bucharestSheet);
   parseLargeLocalities(largeLocalitiesSheet);
   parseSmallLocalities(smallLocalitiesSheet);
+
   persist("counties.json", countiesMap);
+  persist("postal-codes.json", postalCodeMap);
+
   logStats();
 }
 
@@ -47,9 +52,11 @@ function parseBucharest(sheet) {
     // Streets which have a single postal code.
     if (isEmpty(streetNumberName)) {
       street.postalCode = parsePostalCode(postalCode);
+      registerPostalCode(postalCode, countyName, localityName, streetName);
     } else {
       const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
       streetNumber.postalCode = parsePostalCode(postalCode);
+      registerPostalCode(postalCode, countyName, localityName, streetName, streetNumberName);
     }
 
     streetCell = streetNameAt(++rowIndex);
@@ -81,9 +88,11 @@ function parseLargeLocalities(sheet) {
     // Streets which have a single postal code.
     if (isEmpty(streetNumberName)) {
       street.postalCode = parsePostalCode(postalCode);
+      registerPostalCode(postalCode, countyName, localityName, streetName);
     } else {
       const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
       streetNumber.postalCode = parsePostalCode(postalCode);
+      registerPostalCode(postalCode, countyName, localityName, streetName, streetNumberName);
     }
 
     countyCell = countyAt(++rowIndex);
@@ -105,6 +114,7 @@ function parseSmallLocalities(sheet) {
 
     const locality = obtainLocality(countyName, localityName);
     locality.postalCode = parsePostalCode(postalCode);
+    registerPostalCode(postalCode, countyName, localityName);
 
     countyCell = countyAt(++rowIndex);
   }
@@ -179,6 +189,29 @@ function obtainStreetNumber(countyName, localityName, streetName, streetNumberNa
 
   street.numbers[streetNumberName] = newStreetNumber;
   return newStreetNumber;
+}
+
+function registerPostalCode(postalCode, countyName, localityName, streetName, streetNumberName) {
+  let newPostalCode = {};
+  postalCodeMap[postalCode] = newPostalCode;
+
+  if (countyName == undefined) return newPostalCode;
+  const county = obtainCounty(countyName);
+  newPostalCode.countyId = county.index;
+
+  if (localityName == undefined) return newPostalCode;
+  const locality = obtainLocality(countyName, localityName);
+  newPostalCode.localityId = locality.index;
+
+  if (streetName == undefined) return newPostalCode;
+  const street = obtainStreet(countyName, localityName, streetName);
+  newPostalCode.streetId = street.index;
+
+  if (streetNumberName == undefined) return newPostalCode;
+  const streetNumber = obtainStreetNumber(countyName, localityName, streetName, streetNumberName);
+  newPostalCode.streetNumberId = streetNumber.index;
+
+  return newPostalCode;
 }
 
 function logStats() {
