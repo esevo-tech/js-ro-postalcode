@@ -4,6 +4,7 @@ const path = require("path");
 
 let countiesMap = {};
 let numCounties = 0;
+let numLocalities = 0;
 
 function loadFile(path) {
   const workbook = xlsx.readFile(path);
@@ -60,6 +61,7 @@ function obtainLocality(countyName, localityName) {
   }
 
   const newLocality = {
+    "index": numLocalities++,
     "name": localityName
   };
 
