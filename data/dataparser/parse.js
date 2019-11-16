@@ -6,6 +6,7 @@ let countiesMap = {};
 let numCounties = 0;
 let numLocalities = 0;
 let numStreets = 0;
+let numStreetNumbers = 0;
 
 function loadFile(path) {
   const workbook = xlsx.readFile(path);
@@ -48,6 +49,8 @@ function parseLargeLocalities(sheet) {
     // Streets which have a single postal code.
     if (streetNumber === undefined || streetNumber.trim().length == 0) {
       street.postalCode = postalCode;
+    } else {
+      obtainStreetNumber(countyName, localityName, streetName, streetNumber);
     }
 
     countyCell = countyAt(++rowIndex);
@@ -120,6 +123,25 @@ function obtainStreet(countyName, localityName, streetName) {
 
   locality.streets[streetName] = newStreet;
   return newStreet;
+}
+
+function obtainStreetNumber(countyName, localityName, streetName, streetNumber) {
+  const street = obtainStreet(countyName, localityName, streetName);
+
+  if (street.numbers === undefined) {
+    street.numbers = {};
+  }
+
+  if (street.numbers[streetNumber] !== undefined) {
+    return street.numbers[streetNumber];
+  }
+
+  const newStreetNumber = {
+    "index": numStreetNumbers++
+  }
+
+  street.numbers[streetNumber] = newStreetNumber;
+  return newStreetNumber;
 }
 
 function persist(name, data) {
