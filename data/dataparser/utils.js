@@ -5,6 +5,13 @@ function loadJSON(path) {
   return JSON.parse(file);
 }
 
+function deleteFile(path) {
+  if (fs.existsSync(path)) {
+    fs.unlinkSync(path);
+  }
+}
+
 module.exports = {
-  loadJSON
+  loadJSON,
+  deleteFile
 };

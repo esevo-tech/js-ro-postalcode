@@ -1,6 +1,8 @@
 const utils = require("./utils");
 
 function buildDatabase(countiesFile, postalCodesFile, outputFile) {
+  utils.deleteFile(outputFile);
+  
   const counties = utils.loadJSON(countiesFile);
   const postalCodes = utils.loadJSON(postalCodesFile);
 }
