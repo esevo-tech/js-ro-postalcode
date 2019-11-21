@@ -7,14 +7,21 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
   const postalCodes = utils.loadJSON(postalCodesFile);
 
   const insertCountyQuery = db.prepare("INSERT INTO `counties` (countyId, name) VALUES (?, ?)");
+  const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, name) VALUES (?, ?)");
 
   db.serialize(() => {
     for (const countyName in counties) {
       const county = counties[countyName];
       insertCountyQuery.run(county.index, countyName);
+
+      for (const localityName in county.localities) {
+        const locality = county.localities[localityName];
+        insertLocalityQuery.run(locality.index, localityName);
+      }
     }
 
     insertCountyQuery.finalize();
+    insertLocalityQuery.finalize();
   });
 }
 
@@ -23,7 +30,7 @@ function initializeDatabase(outputFile) {
   const db = new sqlite3.Database(outputFile);
   const initQuery = utils.getFileContents("./structure.sql");
   db.serialize(() => {
-    db.run(initQuery);
+    db.exec(initQuery);
   })
   return db;
 }
