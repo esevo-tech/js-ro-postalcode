@@ -7,16 +7,18 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
   const postalCodes = utils.loadJSON(postalCodesFile);
 
   const insertCountyQuery = db.prepare("INSERT INTO `counties` (countyId, name) VALUES (?, ?)");
-  const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, name) VALUES (?, ?)");
+  const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, countyId, name, postalCode) VALUES (?, ?, ?, ?)");
 
   db.serialize(() => {
     for (const countyName in counties) {
       const county = counties[countyName];
-      insertCountyQuery.run(county.index, countyName);
+      const countyId = county.index;
+      insertCountyQuery.run(countyId, countyName);
 
       for (const localityName in county.localities) {
         const locality = county.localities[localityName];
-        insertLocalityQuery.run(locality.index, localityName);
+        const localityId = locality.index;
+        insertLocalityQuery.run(localityId, countyId, localityName, locality.postalCode);
       }
     }
 

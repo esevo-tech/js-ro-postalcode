@@ -5,5 +5,7 @@ CREATE TABLE `counties` (
 
 CREATE TABLE `localities` (
   `localityId` INT,
-  `name` VARCHAR(100)
+  `countyId` INT,
+  `name` VARCHAR(100),
+  `postalCode` VARCHAR(100)
 );
