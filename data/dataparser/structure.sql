@@ -16,3 +16,10 @@ CREATE TABLE `streets` (
   `name` VARCHAR(100),
   `postalCode` VARCHAR(100)
 );
+
+CREATE TABLE `streetNumbers` (
+  `streetNumberId` INT,
+  `streetId` INT,
+  `name` VARCHAR(100),
+  `postalCode` VARCHAR(100)
+);
