@@ -23,3 +23,11 @@ CREATE TABLE `streetNumbers` (
   `name` VARCHAR(100),
   `postalCode` VARCHAR(100)
 );
+
+CREATE TABLE `postalCodes` (
+  `postalCode` VARCHAR(100),
+  `countyId` INT,
+  `localityId` INT,
+  `streetId` INT,
+  `streetNumberId` INT
+);

@@ -10,7 +10,8 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
   const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, countyId, name, postalCode) VALUES (?, ?, ?, ?)");
   const insertStreetQuery = db.prepare("INSERT INTO `streets` (streetId, localityId, name, postalCode) VALUES (?, ?, ?, ?)");
   const insertStreetNumberQuery = db.prepare("INSERT INTO `streetNumbers` (streetNumberId, streetId, name, postalCode) VALUES (?, ?, ?, ?)");
-
+  const insertPostalCodeQuery = db.prepare("INSERT INTO `postalCodes` (postalCode, countyId, localityId, streetId, streetNumberId) VALUES (?, ?, ?, ?, ?)");
+  
   db.serialize(() => {
     for (const countyName in counties) {
       const county = counties[countyName];
@@ -40,10 +41,23 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
       }
     }
 
+    for (const postalCodeName in postalCodes) {
+      const postalCode = postalCodes[postalCodeName];
+
+      insertPostalCodeQuery.run(
+        postalCodeName,
+        postalCode.countyId,
+        postalCode.localityId,
+        postalCode.streetId,
+        postalCode.streetNumberId
+      );
+    }
+
     insertCountyQuery.finalize();
     insertLocalityQuery.finalize();
     insertStreetQuery.finalize();
     insertStreetNumberQuery.finalize();
+    insertPostalCodeQuery.finalize();
   });
 }
 
