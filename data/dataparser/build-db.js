@@ -41,11 +41,9 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
       }
     }
 
-    for (const postalCodeName in postalCodes) {
-      const postalCode = postalCodes[postalCodeName];
-
+    for (const postalCode of postalCodes) {
       insertPostalCodeQuery.run(
-        postalCodeName,
+        postalCode.postalCode,
         postalCode.countyId,
         postalCode.localityId,
         postalCode.streetId,

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 let countiesMap = {};
-let postalCodeMap = {};
+let postalCodesList = [];
 
 let numCounties = 0;
 let numLocalities = 0;
@@ -23,7 +23,7 @@ function loadFile(path) {
   parseSmallLocalities(smallLocalitiesSheet);
 
   persist("counties.json", countiesMap);
-  persist("postal-codes.json", postalCodeMap);
+  persist("postal-codes.json", postalCodesList);
 
   logStats();
 }
@@ -193,8 +193,10 @@ function obtainStreetNumber(countyName, localityName, streetName, streetNumberNa
 }
 
 function registerPostalCode(postalCode, countyName, localityName, streetName, streetNumberName) {
-  let newPostalCode = {};
-  postalCodeMap[postalCode] = newPostalCode;
+  let newPostalCode = {
+    postalCode
+  };
+  postalCodesList.push(newPostalCode);
   numPostalCodes++;
 
   if (countyName == undefined) return newPostalCode;
