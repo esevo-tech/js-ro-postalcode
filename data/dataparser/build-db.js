@@ -7,9 +7,9 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
   const postalCodes = utils.loadJSON(postalCodesFile);
 
   const insertCountyQuery = db.prepare("INSERT INTO `counties` (countyId, name) VALUES (?, ?)");
-  const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, countyId, name, postalCode) VALUES (?, ?, ?, ?)");
-  const insertStreetQuery = db.prepare("INSERT INTO `streets` (streetId, localityId, name, postalCode) VALUES (?, ?, ?, ?)");
-  const insertStreetNumberQuery = db.prepare("INSERT INTO `streetNumbers` (streetNumberId, streetId, name, postalCode) VALUES (?, ?, ?, ?)");
+  const insertLocalityQuery = db.prepare("INSERT INTO `localities` (localityId, countyId, name) VALUES (?, ?, ?)");
+  const insertStreetQuery = db.prepare("INSERT INTO `streets` (streetId, localityId, name) VALUES (?, ?, ?)");
+  const insertStreetNumberQuery = db.prepare("INSERT INTO `streetNumbers` (streetNumberId, streetId, name) VALUES (?, ?, ?)");
   const insertPostalCodeQuery = db.prepare("INSERT INTO `postalCodes` (postalCode, countyId, localityId, streetId, streetNumberId) VALUES (?, ?, ?, ?, ?)");
   
   db.serialize(() => {
@@ -21,19 +21,19 @@ function buildDatabase(countiesFile, postalCodesFile, outputFile) {
       for (const localityName in county.localities) {
         const locality = county.localities[localityName];
         const localityId = locality.index;
-        insertLocalityQuery.run(localityId, countyId, localityName, locality.postalCode);
+        insertLocalityQuery.run(localityId, countyId, localityName);
 
         if (locality.streets !== undefined) {
           for (const streetName in locality.streets) {
             const street = locality.streets[streetName];
             const streetId = street.index;
-            insertStreetQuery.run(streetId, localityId, streetName, street.postalCode);
+            insertStreetQuery.run(streetId, localityId, streetName);
 
             if (street.numbers !== undefined) {
               for (const streetNumberName in street.numbers) {
                 const streetNumber = street.numbers[streetNumberName];
                 const streetNumberId = streetNumber.index;
-                insertStreetNumberQuery.run(streetNumberId, streetId, streetNumberName, streetNumber.postalCode);
+                insertStreetNumberQuery.run(streetNumberId, streetId, streetNumberName);
               }
             }
           }
