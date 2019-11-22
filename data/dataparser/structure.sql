@@ -22,6 +22,7 @@ CREATE TABLE `streetNumbers` (
 );
 
 CREATE TABLE `postalCodes` (
+  `postalCodeId` INT,
   `postalCode` INT,
   `countyId` INT,
   `localityId` INT,
