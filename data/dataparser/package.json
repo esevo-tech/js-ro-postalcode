@@ -9,6 +9,7 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
+    "js-ro-diacritics": "file:../../../js-ro-diacritics",
     "sqlite3": "^4.1.0",
     "xlsx": "^0.15.2"
   }
