@@ -1,6 +1,7 @@
 const xlsx = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+const diacritics = require("js-ro-diacritics");
 
 let countiesMap = {};
 let postalCodesList = [];
@@ -39,9 +40,9 @@ function parseBucharest(sheet) {
 
   let streetCell = streetNameAt(rowIndex);
   while (streetCell !== undefined) {
-    const streetType = streetTypeAt(rowIndex).v;
-    const streetName = streetCell.v;
-    const streetNumberName = streetNumberNameAt(rowIndex).v;
+    const streetType = diacritics.normalize(streetTypeAt(rowIndex).v);
+    const streetName = diacritics.normalize(streetCell.v);
+    const streetNumberName = diacritics.normalize(streetNumberNameAt(rowIndex).v);
     const postalCode = postalCodeAt(rowIndex).v;
     const sectorName = sectorNameAt(rowIndex).v;
     const countyName = "București";
@@ -76,11 +77,11 @@ function parseLargeLocalities(sheet) {
   
   let countyCell = countyAt(rowIndex);
   while (countyCell !== undefined) {
-    const countyName = countyCell.v;
-    const localityName = localityAt(rowIndex).v;
-    const streetType = streetTypeAt(rowIndex).v;
-    const streetName = streetNameAt(rowIndex).v;
-    const streetNumberName = streetNumberAt(rowIndex).v;
+    const countyName = diacritics.normalize(countyCell.v);
+    const localityName = diacritics.normalize(localityAt(rowIndex).v);
+    const streetType = diacritics.normalize(streetTypeAt(rowIndex).v);
+    const streetName = diacritics.normalize(streetNameAt(rowIndex).v);
+    const streetNumberName = diacritics.normalize(streetNumberAt(rowIndex).v);
     const postalCode = postalCodeAt(rowIndex).v;
     
     const street = obtainStreet(countyName, localityName, streetName);
@@ -109,8 +110,8 @@ function parseSmallLocalities(sheet) {
 
   let countyCell = countyAt(rowIndex);
   while (countyCell !== undefined) {
-    const countyName = countyCell.v;
-    const localityName = localityAt(rowIndex).v;
+    const countyName = diacritics.normalize(countyCell.v);
+    const localityName = diacritics.normalize(localityAt(rowIndex).v);
     const postalCode = postalCodeAt(rowIndex).v;
 
     const locality = obtainLocality(countyName, localityName);
